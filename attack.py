@@ -21,13 +21,13 @@ tf.flags.DEFINE_string(
     'master', '', 'The address of the TensorFlow master to use.')
 
 tf.flags.DEFINE_string(
-    'checkpoint_path', '', 'Path to checkpoint for inception network.')
+    'checkpoint_path', '/content/checkpoint/inception_v3.ckpt', 'Path to checkpoint for inception network.')
 
 tf.flags.DEFINE_string(
-   'input_dir', '', 'Input directory with images.')
+   'input_dir', '/content/input', 'Input directory with images.')
 
 tf.flags.DEFINE_string(
-   'output_dir', '', 'Output directory with images.')
+   'output_dir', '/content/output/adv', 'Output directory with images.')
 
 tf.flags.DEFINE_integer(
     'image_width', 299, 'Width of each input images.')
@@ -84,7 +84,7 @@ def load_images(input_dir, output_dir, batch_shape):
     output_name = output_dir + '/'+ temp_name[-1]
     # check if the file exist
     if os.path.isfile(output_name) == False:
-      with tf.gfile.Open(filepath) as f:
+      with tf.gfile.Open(filepath, 'rb') as f:
         image = imread(f, mode='RGB').astype(np.float) / 255.0
     # Images for inception classifier are normalized to be in [-1, 1] interval.
       images[idx, :, :, :] = image * 2.0 - 1.0
@@ -185,6 +185,7 @@ def main(_):
       for filenames, images in load_images(FLAGS.input_dir, FLAGS.output_dir, batch_shape):
         adv_images = sess.run(x_adv, feed_dict={x_input: images})
         save_images(adv_images, filenames, FLAGS.output_dir)
+        save_images(images, filenames, '/content/output/normal')
 
 
 if __name__ == '__main__':
