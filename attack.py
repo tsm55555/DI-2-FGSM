@@ -79,7 +79,7 @@ def load_images(input_dir, output_dir, batch_shape):
   filenames = []
   idx = 0
   batch_size = batch_shape[0]
-  for filepath in tf.gfile.Glob(os.path.join(input_dir, '*.png')):
+  for filepath in tf.gfile.Glob(os.path.join(input_dir, '*.jpg')):
     temp_name = str.split(filepath, '/')
     output_name = output_dir + '/'+ temp_name[-1]
     # check if the file exist
@@ -112,7 +112,7 @@ def save_images(images, filenames, output_dir):
     # Images for inception classifier are normalized to be in [-1, 1] interval,
     # so rescale them back to [0, 1].
     with tf.gfile.Open(os.path.join(output_dir, filename), 'w') as f:
-      imsave(f, (images[i, :, :, :] + 1.0) * 0.5 * 255, format='png')
+      imsave(f, (images[i, :, :, :] + 1.0) * 0.5 * 255, format='JPEG')
 
 
 def graph(x, y, i, x_max, x_min, grad):
